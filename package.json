@@ -1,6 +1,6 @@
-// Cầm mò mấy file này nha mấy fen : )))
+
 {
-  "name": "firebase-register-api",
+  "name": "firebase-register-api", // Cầm mò mấy file này nha mấy fen : )))
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
