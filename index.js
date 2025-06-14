@@ -1,5 +1,6 @@
 require('dotenv').config();
 const admin = require('firebase-admin');
+const cors = require('cors'); // ⬅️ Thêm dòng này
 
 admin.initializeApp({
   credential: admin.credential.cert({
