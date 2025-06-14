@@ -1,6 +1,6 @@
 require('dotenv').config();
 const admin = require('firebase-admin');
-const cors = require('cors'); // ⬅️ Thêm dòng này
+const cors = require('cors');
 
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -17,7 +17,11 @@ const bodyParser = require('body-parser');
 const db = admin.firestore();
 const app = express();
 app.use(bodyParser.json());
-
+app.use(cors({
+  origin: '*', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.post('/register', async (req, res) => {
   const { email, password, username, hoten, fblink } = req.body;
 
