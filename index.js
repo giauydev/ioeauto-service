@@ -60,14 +60,14 @@ app.get('/gui-the',async (req, res) => {
     redirect: 'follow'
   };
 
-  try {
-    const response = await fetch("http://thesieure.com/chargingws/v2", requestOptions);
-    const result = await response.text();
-    res.send(result);
-  } catch (error) {
-    console.error('error', error);
-    res.status(500).send('Có lỗi xảy ra!' + result);
-  }
+try {
+  const response = await fetch("http://thesieure.com/chargingws/v2", requestOptions);
+  const result = await response.text();
+  res.send(result);
+} catch (error) {
+  console.error('Lỗi khi gửi yêu cầu đến thesieure:', error);
+  res.status(500).send('Đã có lỗi xảy ra: ' + error.message);
+}
 });
 
 app.post('/register', async (req, res) => {
