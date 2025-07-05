@@ -66,7 +66,7 @@ app.get('/gui-the',async (req, res) => {
     res.send(result);
   } catch (error) {
     console.error('error', error);
-    res.status(500).send('Có lỗi xảy ra!');
+    res.status(500).send('Có lỗi xảy ra!' + result);
   }
 });
 
