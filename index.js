@@ -61,7 +61,7 @@ app.get('/gui-the',async (req, res) => {
   };
 
   try {
-    const response = await fetch("http://{{domain_post}}/chargingws/v2", requestOptions);
+    const response = await fetch("http://thesieure.com/chargingws/v2", requestOptions);
     const result = await response.text();
     res.send(result);
   } catch (error) {
