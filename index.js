@@ -1,7 +1,10 @@
+// testing
 require('dotenv').config();
 const admin = require('firebase-admin');
 const cors = require('cors');
-
+const fetch = require('node-fetch');    
+const crypto = require('crypto');
+const FormData = require('form-data');  
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: process.env.FIREBASE_PROJECT_ID,
@@ -11,8 +14,11 @@ admin.initializeApp({
 });
 const express = require('express');
 const bodyParser = require('body-parser');
+const TSR_PARTNER_KEY = process.env.PARTNER_KEY_TSR;
 
-
+function md5Hash(input) {
+  return crypto.createHash('md5').update(input).digest('hex');
+}
 
 const db = admin.firestore();
 const app = express();
@@ -22,6 +28,48 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+const count = {
+  request_id_count: 0
+};
+app.get('/gui-the',async (req, res) => {
+  const nha_mang = req.query.nha_mang;
+  const ma_the = req.query.ma_the;
+  const serial = req.query.serial;
+  const amount = req.query.amount;
+  const request_id = count.request_id_count;
+  count.request_id_count++;
+  const partner_id = "21921979864";
+  const sign = md5Hash(TSR_PARTNER_KEY + ma_the + serial);
+   const myHeaders = new fetch.Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  const formdata = new FormData();
+  formdata.append("telco", nha_mang);
+  formdata.append("code", ma_the);
+  formdata.append("serial", serial);
+  formdata.append("amount", amount);
+  formdata.append("request_id", request_id);
+  formdata.append("partner_id", partner_id);
+  formdata.append("sign", sign);
+  formdata.append("command", "charging");
+
+  const requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: formdata,
+    redirect: 'follow'
+  };
+
+  try {
+    const response = await fetch("http://{{domain_post}}/chargingws/v2", requestOptions);
+    const result = await response.text();
+    res.send(result);
+  } catch (error) {
+    console.error('error', error);
+    res.status(500).send('Có lỗi xảy ra!');
+  }
+});
+
 app.post('/register', async (req, res) => {
   const { email, password, username, hoten, fblink } = req.body;
 
