@@ -40,8 +40,9 @@ app.get('/gui-the',async (req, res) => {
   count.request_id_count++;
   const partner_id = "21921979864";
   const sign = md5Hash(TSR_PARTNER_KEY + ma_the + serial);
-   const myHeaders = new fetch.Headers();
-  myHeaders.append("Content-Type", "application/json");
+const myHeaders = {
+  "Content-Type": "application/json"
+};
 
   const formdata = new FormData();
   formdata.append("telco", nha_mang);
