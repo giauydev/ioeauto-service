@@ -46,7 +46,7 @@ app.get('/charge/callback',async (req,res) => {
   const docRef = db.collection('lich-su-nap-the').doc(request_id.toString());
   const docSnap = await docRef.get();
 
-  if(docRef.exists)
+  if(docSnap.exists)
   {
     const data = docSnap.data();
     const seri = data.serial;
