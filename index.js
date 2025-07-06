@@ -40,9 +40,9 @@ function randomString(length = 10) {
   }
   return result;
 }
-app.post('/charge/callback',async (req,res) => {
+app.get('/charge/callback',async (req,res) => {
   
-  const {status,message,request_id,declared_value,value,amount,code,serial,telco,trans_id,callback_sign} = req.body;
+ const { status, message, request_id, declared_value, value, amount, code, serial, telco, trans_id, callback_sign } = req.query;
   const docRef = db.collection('lich-su-nap-the').doc(request_id.toString());
   const docSnap = await docRef.get();
 
@@ -85,7 +85,7 @@ app.post('/charge/callback',async (req,res) => {
   }
   else
   {
-      res.status(500).json({ error: "Lỗi từ bên TSR Server! Vui lòng liên hệ với quản trị viên IOEAuto (giauydev) kèm theo mã đơn hàng: "+request_id +" để được hỗ trợ!" });
+    res.status(500).send("error: "+"Lỗi từ bên TSR Server! Vui lòng liên hệ với quản trị viên IOEAuto (giauydev) kèm theo mã đơn hàng: "+request_id +" để được hỗ trợ!" });
   }
 });
 app.get('/gui-the',verifyToken,async (req, res) => {
