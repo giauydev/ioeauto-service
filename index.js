@@ -124,7 +124,7 @@ app.get('/lich-su-nap-the',verifyToken, async (req,res) =>
             "Serial: ": data.serial.toString(),
             "Nhà mạng: ": data.telco.toString(),
             "Trạng thái: ": data.status.toString(),
-            "Thời gian: ": data.thoi_gian.toString()
+            "Thời gian: ": data.thoi_gian.toLocaleString()
             
           }
         );
