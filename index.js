@@ -56,12 +56,17 @@ app.get('/charge/callback',async (req,res) => {
     const userSnap = await docUser.get();
     if(callback_sign == md5Hash(TSR_PARTNER_KEY + maThe + seri))
     {
-      if(status == 1)
+      if(status == 1 && maThe == code && seri == serial)
       {
         await db.collection('lich-su-nap-the')
         .doc(request_id.toString())
         .update({status: "Thành công"});
         res.status(1).send(message);
+        const dataUser =  userSnap.data();
+        const coinHienTai = dataUser.coin;
+        await db.collection('users')
+        .doc(data.uid.toString())
+        .update({coin: parseInt(coinHienTai) + parseInt(declared_value)});
       }
       if(status == 2)
       {
@@ -74,12 +79,7 @@ app.get('/charge/callback',async (req,res) => {
       {
         await db.collection('lich-su-nap-the')
         .doc(request_id.toString())
-        .update({status: "Thẻ lỗi"}); // test + so du
-        const dataUser =  userSnap.data();
-        const coinHienTai = dataUser.coin;
-        await db.collection('users')
-        .doc(data.uid.toString())
-        .update({coin: parseInt(coinHienTai) + parseInt(declared_value)});
+        .update({status: "Thẻ lỗi"});
       }
       if(status == 4)
       {
