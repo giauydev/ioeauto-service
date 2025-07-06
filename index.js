@@ -58,7 +58,7 @@ app.get('/charge/callback',async (req,res) => {
         await db.collection('lich-su-nap-the')
         .doc(request_id.toString())
         .update({status: "Thành công"});
-        
+        res.status(1).send(message);
       }
       if(status == 2)
       {
@@ -81,6 +81,7 @@ app.get('/charge/callback',async (req,res) => {
         .update({status: "Bảo trì"});
         
       }
+       res.status(parseInt(status)).send(message);
     }
   }
   else
