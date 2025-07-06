@@ -85,7 +85,7 @@ app.get('/charge/callback',async (req,res) => {
   }
   else
   {
-    res.status(500).send("error: "+"Lỗi từ bên TSR Server! Vui lòng liên hệ với quản trị viên IOEAuto (giauydev) kèm theo mã đơn hàng: "+request_id +" để được hỗ trợ!" });
+    res.status(500).send("error: "+"Lỗi từ bên TSR Server! Vui lòng liên hệ với quản trị viên IOEAuto (giauydev) kèm theo mã đơn hàng: "+request_id +" để được hỗ trợ!");
   }
 });
 app.get('/gui-the',verifyToken,async (req, res) => {
