@@ -5,7 +5,7 @@ const cors = require('cors');
 const fetch = require('node-fetch');    
 const crypto = require('crypto');
 const FormData = require('form-data');  
-const verifyToken = require('./verifyToken');
+const verifyToken = require('./firebaseAuthencation');
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: process.env.FIREBASE_PROJECT_ID,
