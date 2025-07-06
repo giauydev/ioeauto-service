@@ -40,7 +40,53 @@ function randomString(length = 10) {
   }
   return result;
 }
-app.post('/charge/callback',async (req,res) -> {
+app.post('/charge/callback',async (req,res) => {
+  
+  const {status,message,request_id,declared_value,value,amount,code,serial,telco,trans_id,callback_sign} = req.body;
+  const docRef = db.collection('lich-su-nap-the').doc(request_id.toString());
+  const docSnap = await docRef.get();
+
+  if(docRef.exists)
+  {
+    const data = docSnap.data();
+    const seri = data.serial;
+    const maThe = data.id_the;
+    if(callback_sign == md5Hash(TSR_PARTNER_KEY + maThe + seri))
+    {
+      if(status == 1)
+      {
+        await db.collection('lich-su-nap-the')
+        .doc(request_id.toString())
+        .update({status: "Thành công"});
+        
+      }
+      if(status == 2)
+      {
+        await db.collection('lich-su-nap-the')
+        .doc(request_id.toString())
+        .update({status: "Thẻ sai mệnh giá"});
+        
+      }
+      if(status == 3)
+      {
+        await db.collection('lich-su-nap-the')
+        .doc(request_id.toString())
+        .update({status: "Thẻ lỗi"});
+        
+      }
+      if(status == 4)
+      {
+        await db.collection('lich-su-nap-the')
+        .doc(request_id.toString())
+        .update({status: "Bảo trì"});
+        
+      }
+    }
+  }
+  else
+  {
+      res.status(500).json({ error: "Lỗi từ bên TSR Server! Vui lòng liên hệ với quản trị viên IOEAuto (giauydev) kèm theo mã đơn hàng: "+request_id +" để được hỗ trợ!" });
+  }
 });
 app.get('/gui-the',verifyToken,async (req, res) => {
   const nha_mang = req.query.nha_mang;
@@ -83,6 +129,7 @@ try {
     telco: nha_mang,
     serial,
     ma_the: ma_the.slice(-4).padStart(ma_the.length, '*'),
+    id_the: ma_the,
     amount,
     status: data.status === 1 ? 'thanh_cong' : (data.status === 99 ? 'dang_xu_ly' : 'that_bai'),
     thoi_gian: admin.firestore.FieldValue.serverTimestamp()
