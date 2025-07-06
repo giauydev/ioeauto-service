@@ -45,7 +45,8 @@ app.get('/charge/callback',async (req,res) => {
  const { status, message, request_id, declared_value, value, amount, code, serial, telco, trans_id, callback_sign } = req.query;
   const docRef = db.collection('lich-su-nap-the').doc(request_id.toString());
   const docSnap = await docRef.get();
-
+  const docUser = db.collection('users').doc(data.uid);
+  const userSnap = await docUser.get();
   if(docSnap.exists)
   {
     const data = docSnap.data();
@@ -71,8 +72,11 @@ app.get('/charge/callback',async (req,res) => {
       {
         await db.collection('lich-su-nap-the')
         .doc(request_id.toString())
-        .update({status: "Thẻ lỗi"});
-        
+        .update({status: "Thẻ lỗi"}); // test + so du
+        const coinHienTai = userSnap.coin;
+        await db.collection('users')
+        .doc(data.uid.toString())
+        .update({coin: parseInt(coinHienTai) + parseInt(declared_value)});
       }
       if(status == 4)
       {
