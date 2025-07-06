@@ -136,6 +136,7 @@ app.get('/lich-su-nap-the',verifyToken, async (req,res) =>
     catch(error)
     {
       res.status(500).json({message: "Có lỗi xảy ra!"});
+      console.log(error.toString());
     }
   });
 app.get('/gui-the',verifyToken,async (req, res) => {
