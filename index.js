@@ -41,17 +41,19 @@ function randomString(length = 10) {
   return result;
 }
 app.get('/charge/callback',async (req,res) => {
-  
+  try
+  {
  const { status, message, request_id, declared_value, value, amount, code, serial, telco, trans_id, callback_sign } = req.query;
   const docRef = db.collection('lich-su-nap-the').doc(request_id.toString());
   const docSnap = await docRef.get();
-  const docUser = db.collection('users').doc(data.uid);
-  const userSnap = await docUser.get();
+
   if(docSnap.exists)
   {
     const data = docSnap.data();
     const seri = data.serial;
     const maThe = data.id_the;
+    const docUser = db.collection('users').doc(data.uid.toString());
+    const userSnap = await docUser.get();
     if(callback_sign == md5Hash(TSR_PARTNER_KEY + maThe + seri))
     {
       if(status == 1)
@@ -73,7 +75,8 @@ app.get('/charge/callback',async (req,res) => {
         await db.collection('lich-su-nap-the')
         .doc(request_id.toString())
         .update({status: "Thẻ lỗi"}); // test + so du
-        const coinHienTai = userSnap.coin;
+        const dataUser =  userSnap.data();
+        const coinHienTai = dataUser.coin;
         await db.collection('users')
         .doc(data.uid.toString())
         .update({coin: parseInt(coinHienTai) + parseInt(declared_value)});
@@ -90,7 +93,12 @@ app.get('/charge/callback',async (req,res) => {
   }
   else
   {
-    res.status(500).send("error: "+"Lỗi từ bên TSR Server! Vui lòng liên hệ với quản trị viên IOEAuto (giauydev) kèm theo mã đơn hàng: "+request_id +" để được hỗ trợ!");
+    res.status(500).send("error: "+"Lỗi từ bên phía server của tớ! Vui lòng liên hệ với quản trị viên IOEAuto (giauydev) kèm theo mã đơn hàng: "+request_id +" để được hỗ trợ!");
+  }
+  }
+  catch(error)
+  {
+    res.status(500).send(error.message);
   }
 });
 app.get('/gui-the',verifyToken,async (req, res) => {
