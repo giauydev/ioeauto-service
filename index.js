@@ -1,4 +1,3 @@
-// testing
 require('dotenv').config();
 const admin = require('firebase-admin');
 const cors = require('cors');
@@ -121,7 +120,7 @@ app.get('/lich-su-nap-the',verifyToken, async (req,res) =>
         ketQua.push(
           {
             "Mã đơn hàng: ": doc.id.toString(),
-            "Mã thẻ: ": data.id_the.toString(),
+            "Mã thẻ: ": data.ma_the.toString(),
             "Serial: ": data.serial.toString(),
             "Nhà mạng: ": data.telco.toString(),
             "Trạng thái: ": data.status.toString(),
