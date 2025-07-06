@@ -5,6 +5,7 @@ const cors = require('cors');
 const fetch = require('node-fetch');    
 const crypto = require('crypto');
 const FormData = require('form-data');  
+const verifyToken = require('./verifyToken');
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: process.env.FIREBASE_PROJECT_ID,
@@ -31,11 +32,12 @@ app.use(cors({
 const count = {
   request_id_count: 0
 };
-app.get('/gui-the',async (req, res) => {
+app.get('/gui-the',verifyToken,async (req, res) => {
   const nha_mang = req.query.nha_mang;
   const ma_the = req.query.ma_the;
   const serial = req.query.serial;
   const amount = req.query.amount;
+  const uid = req.uid;
   const request_id = count.request_id_count;
   count.request_id_count++;
   const partner_id = "21921979864";
@@ -63,7 +65,20 @@ const myHeaders = {
 try {
   const response = await fetch("http://thesieure.com/chargingws/v2", requestOptions);
   const result = await response.text();
+  const data = JSON.parse(result);
   res.send(result);
+ await db.collection('lich-su-nap-the')
+  .doc(request_id.toString())
+  .set({
+    uid: req.uid,
+    telco: nha_mang,
+    serial,
+    ma_the: ma_the.slice(-4).padStart(ma_the.length, '*'),
+    amount,
+    status: data.status === 1 ? 'thanh_cong' : (data.status === 99 ? 'dang_xu_ly' : 'that_bai'),
+    thoi_gian: admin.firestore.FieldValue.serverTimestamp()
+  });
+  
 } catch (error) {
   console.error('Lỗi khi gửi yêu cầu đến thesieure:', error);
   res.status(500).send('Đã có lỗi xảy ra: ' + error.message);
