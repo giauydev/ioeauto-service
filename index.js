@@ -40,7 +40,8 @@ function randomString(length = 10) {
   }
   return result;
 }
-
+app.post('/charge/callback',async (req,res) -> {
+});
 app.get('/gui-the',verifyToken,async (req, res) => {
   const nha_mang = req.query.nha_mang;
   const ma_the = req.query.ma_the;
