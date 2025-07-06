@@ -30,7 +30,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 const count = {
-  request_id_count: 0
+  request_id_count: 13
 };
 app.get('/gui-the',verifyToken,async (req, res) => {
   const nha_mang = req.query.nha_mang;
