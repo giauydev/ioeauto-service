@@ -32,14 +32,22 @@ app.use(cors({
 const count = {
   request_id_count: 13
 };
+function randomString(length = 10) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for(let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
 app.get('/gui-the',verifyToken,async (req, res) => {
   const nha_mang = req.query.nha_mang;
   const ma_the = req.query.ma_the;
   const serial = req.query.serial;
   const amount = req.query.amount;
   const uid = req.uid;
-  const request_id = count.request_id_count;
-  count.request_id_count++;
+  const request_id = randomString();
   const partner_id = "21921979864";
   const sign = md5Hash(TSR_PARTNER_KEY + ma_the + serial);
 const myHeaders = {
