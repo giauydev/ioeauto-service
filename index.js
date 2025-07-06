@@ -75,7 +75,7 @@ app.get('/charge/callback',async (req,res) => {
         .update({status: "Thẻ sai mệnh giá"});
         
       }
-      if(status == 3)
+      if(status == 3 && maThe == code && seri == serial)
       {
         await db.collection('lich-su-nap-the')
         .doc(request_id.toString())
