@@ -101,6 +101,24 @@ app.get('/charge/callback',async (req,res) => {
     res.status(500).send(error.message);
   }
 });
+// trả về lịch sử nạp thẻ
+app.get('/lich-su-nap-the',verifyToken, async (req,res) =>
+  {
+    const uid = req.body;
+    const snap = await db.collection('lich-su-nap-the')
+      .where('uid','==',uid.toString())
+      .orderBy('thoi-gian','desc')
+      .get();
+    if (snap.empty) {
+  return res.status(404).send("Không có giao dịch nào.");
+}
+    const ketQua = [];
+    snap.forEach(doc => 
+      {
+        const data = doc.data();
+        
+      });
+  });
 app.get('/gui-the',verifyToken,async (req, res) => {
   const nha_mang = req.query.nha_mang;
   const ma_the = req.query.ma_the;
