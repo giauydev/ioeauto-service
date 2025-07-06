@@ -124,7 +124,7 @@ app.get('/lich-su-nap-the',verifyToken, async (req,res) =>
             "Serial: ": data.serial.toString(),
             "Nhà mạng: ": data.telco.toString(),
             "Trạng thái: ": data.status.toString(),
-            data.thoi_gian.toDate().toLocaleString('vi-VN', {
+            "Thời gian: ": data.thoi_gian.toDate().toLocaleString('vi-VN', {
   timeZone: 'Asia/Ho_Chi_Minh'
 })
             
