@@ -10,6 +10,7 @@ async function verifyToken(req, res, next) {
     req.uid = decodedToken.uid;
     next();
   } catch (error) {
+    console.error("Lỗi xác thực:", error);
     return res.status(401).send('Token không hợp lệ');
   }
 }
