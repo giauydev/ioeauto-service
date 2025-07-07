@@ -238,8 +238,8 @@ async function loginAndStoreSession() {
     const captchaRes = await client.post(
       "https://online.mbbank.com.vn/api/retail-web-internetbankingms/getCaptchaImage",
       {
-        refNo: "2024071018571949",
-        deviceIdCommon: "ms7jhh48-mbib-0000-0000-2024071018571948",
+        refNo: refNo,
+        deviceIdCommon: device_id,
         sessionId: ""
       },
       {
