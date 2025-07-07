@@ -102,7 +102,7 @@ async function checkLsgd() {
       body: payload
     });
 
-    const json = await response.text();
+    const json = await response.json();
     return json;
   } catch (err) {
     console.error("Lỗi khi gọi API:", err);
