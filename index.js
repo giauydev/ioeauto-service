@@ -103,6 +103,7 @@ async function checkLsgd() {
     });
 
     const json = await response.json();
+    const result = json.transactionHistoryList;
     return json;
   } catch (err) {
     console.error("Lỗi khi gọi API:", err);
