@@ -13,7 +13,7 @@ const { CookieJar } = require("tough-cookie");
 const fs = require("fs");
 const path = require("path");
 const { JSDOM } = require("jsdom");
-const wasm = require("./loadWasm.js");
+const wasmr = require("./loadWasm.js");
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: process.env.FIREBASE_PROJECT_ID,
@@ -263,7 +263,7 @@ async function loginAndStoreSession() {
       deviceIdCommon: "ms7jhh48-mbib-0000-0000-2024071018571948"
     };
 
-    const dataEnc = await loadWasm(fs.readFileSync("./main.wasm"), request, "0");
+    const dataEnc = await wasmr(fs.readFileSync("./main.wasm"), request, "0");
 
   
     const loginRes = await client.post(
