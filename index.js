@@ -259,8 +259,8 @@ async function loginAndStoreSession() {
       captcha: captchaSolution,
       ibAuthen2faString: "c722fa8dd6f5179150f472497e022ba0",
       sessionId: null,
-      refNo: "0123456789-2024071018223800",
-      deviceIdCommon: "ms7jhh48-mbib-0000-0000-2024071018571948"
+      refNo: refNo,
+      deviceIdCommon: device_id
     };
    const { default: runWasm } = await import('./loadWasm.js');
 const wasmBytes = fs.readFileSync("./main.wasm");
@@ -286,9 +286,8 @@ const loginRes = await client.post(
         status: 'Success',
         timestamp: new Date().toISOString()
       };
-      console.log("Session ID:", sessionStore.sessionId);
+      console.log("Session ID mới:", sessionStore.sessionId);
       session_id = sessionStore.sessionId;
-      console.error("ssid:"+sessionStore.sessionId );
     } else {
       throw new Error("not found");
     }
