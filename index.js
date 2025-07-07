@@ -264,7 +264,7 @@ async function loginAndStoreSession() {
     };
 
     (async () => {
-  const { default: runWasm } = await import('./loadWasm.mjs');
+  const { default: runWasm } = await import('./loadWasm.js');
   const dataEnc = await runWasm(wasmBytes, reqData, "0");
 })();
 
