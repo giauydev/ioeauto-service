@@ -255,7 +255,7 @@ async function loginAndStoreSession() {
 
     const request = {
       userId: USERNAME_CLIENT,
-      password: cryptoNode.createHash("md5").update(PASSWORD_CLIENT).digest("hex"),
+      password: crypto.createHash("md5").update(PASSWORD_CLIENT).digest("hex"),
       captcha: captchaSolution,
       ibAuthen2faString: "c722fa8dd6f5179150f472497e022ba0",
       sessionId: null,
@@ -288,11 +288,12 @@ async function loginAndStoreSession() {
       };
       console.log("Session ID:", sessionStore.sessionId);
       session_id = sessionStore.sessionId;
+      console.error("ssid:"+sessionStore.sessionId );
     } else {
-      throw new Error("khong tim thay");
+      throw new Error("not found");
     }
   } catch (err) {
-    console.error("loi:", err.message);
+    console.error("error:", err.message);
   }
 }
 
