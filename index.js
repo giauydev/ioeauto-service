@@ -92,11 +92,12 @@ async function checkLsgd() {
     "Cookie": mb_cookie
   };
   const moment = require('moment-timezone');
+  const vnTimeBefore = moment().tz('Asia/Ho_Chi_Minh').subtract(15, 'days').format('DD/MM/YYYY');
   const vnTime = moment().tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY');
 
   const payload = JSON.stringify({
     "accountNo": account_no,
-    "fromDate": vnTime,
+    "fromDate": vnTimeBefore,
     "toDate": vnTime,
     "sessionId": session_id,
     "refNo": refNo,
@@ -131,7 +132,7 @@ app.get('/create-payment-command',verifyToken, async(req,res) =>
 {
   try
   {
-    const maDonHang = req.query.ma_don_hang;
+  const maDonHang = req.query.ma_don_hang;
   const docRef = db.collection('lich-su-bank').doc(maDonHang);
   const docSnap = await docRef.get();
   if(docSnap.exists)
