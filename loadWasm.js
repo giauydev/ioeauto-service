@@ -598,12 +598,11 @@ const processAsync = (param1, param2, generatorFunction) =>
  * @param {string}
  * @returns 
  */
-function wasmRunner(wasmBytes, requestData, args1) {
+module.exports = function(wasmBytes, requestData, args1) {
   return processAsync(this, null, function* () {
     const go = new Go();
     let instance = (yield WebAssembly.instantiate(wasmBytes, go.importObject)).instance;
     go.run(instance);
     return globalThis.bder(JSON.stringify(requestData), args1);
   });
-}
-export default wasmRunner;
+};
