@@ -83,7 +83,7 @@ async function checkLsgd() {
     "refNo": refNo,
     "Cookie": mb_cookie
   };
-
+  const moment = require('moment-timezone);
   const vnTime = moment().tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY');
 
   const payload = JSON.stringify({
