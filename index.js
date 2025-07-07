@@ -262,25 +262,22 @@ async function loginAndStoreSession() {
       refNo: "0123456789-2024071018223800",
       deviceIdCommon: "ms7jhh48-mbib-0000-0000-2024071018571948"
     };
+   const { default: runWasm } = await import('./loadWasm.js');
+const wasmBytes = fs.readFileSync("./main.wasm");
 
-    (async () => {
-  const { default: runWasm } = await import('./loadWasm.js');
-  const dataEnc = await runWasm(wasmBytes, reqData, "0");
-})();
+const dataEnc = await runWasm(wasmBytes, request, "0");
 
-  
-    const loginRes = await client.post(
-      "https://online.mbbank.com.vn/api/retail_web/internetbanking/v2.0/doLogin",
-      { dataEnc },
-      {
-        headers: {
-          Authorization: "Basic RU1CUkVUQUlMV0VCOlNEMjM0ZGZnMzQlI0BGR0AzNHNmc2RmNDU4NDNm",
-          app: "MB_WEB",
-          "Content-Type": "application/json"
-        }
-      }
-    );
-
+const loginRes = await client.post(
+  "https://online.mbbank.com.vn/api/retail_web/internetbanking/v2.0/doLogin",
+  { dataEnc },
+  {
+    headers: {
+      Authorization: "Basic RU1CUkVUQUlMV0VCOlNEMjM0ZGZnMzQlI0BGR0AzNHNmc2RmNDU4NDNm",
+      app: "MB_WEB",
+      "Content-Type": "application/json"
+    }
+  }
+);
     const data = loginRes.data;
 
     if (data.sessionId) {
