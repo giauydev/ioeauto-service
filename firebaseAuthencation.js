@@ -10,6 +10,7 @@ async function verifyToken(req, res, next) {
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     req.uid = decodedToken.uid;
+    req.email = decodedToken.email;
     next();
   } catch (error) {
     console.error("Lỗi xác thực:", error);
