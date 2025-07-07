@@ -87,12 +87,12 @@ async function checkLsgd() {
   const vnTime = moment().tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY');
 
   const payload = JSON.stringify({
-    accountNo: account_no,
-    fromDate: vnTime,
-    toDate: vnTime,
-    sessionId: session_id,
-    refNo: refNo,
-    deviceIdCommon: device_id
+    "accountNo": account_no,
+    "fromDate": vnTime,
+    "toDate": vnTime,
+    "sessionId": session_id,
+    "refNo": refNo,
+    "deviceIdCommon": device_id
   });
 
   try {
