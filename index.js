@@ -263,7 +263,7 @@ async function loginAndStoreSession() {
       deviceIdCommon: "ms7jhh48-mbib-0000-0000-2024071018571948"
     };
 
-    const dataEnc = await wasm(fs.readFileSync("./main.wasm"), request, "0");
+    const dataEnc = await loadWasm(fs.readFileSync("./main.wasm"), request, "0");
 
   
     const loginRes = await client.post(
