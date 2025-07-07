@@ -47,6 +47,37 @@ app.get('/ping', (req,res) =>
     res.status(200).send("pong");
   });
 // xóa vnpay api (giauydev chưa đủ tuổi mở go-live api)
+// tạo lệnh thanh toán
+app.get('/create-payment-id', async (req, res) => {
+    let randomId = randomString();
+    let docRef = db.collection('lich-su-bank').doc(randomId);
+    let docSnap = await docRef.get();
+
+    if (docSnap.exists) {
+        // Nếu tồn tại 1 mã đơn hàng thì tạo lại 1 mã khác
+        randomId = randomString();
+        docRef = db.collection('lich-su-bank').doc(randomId);
+        docSnap = await docRef.get();
+        // nếu vẫn tiếp tục tồn tại thì yêu cầu người dùng khởi động lại trang
+        if (docSnap.exists) {
+            return res.status(409).send('Vui lòng khởi động lại trang!');
+        }
+    }
+    return res.status(200).send(randomId);
+});
+app.get('/create-payment-command',verifyToken, async(req,res) =>
+{
+    const maDonHang = req.query.ma_don_hang;
+    await db.collection('lich-su-bank').doc(maDonHang).set({
+        ma_don_hang: maDonHang,
+        email_nhan_tien: req.email,
+        da_nhan: "",
+        ma_giao_dich: "",
+        trang_thai: "Đang chờ xử lý",
+        time: admin.firestore.FieldValue.serverTimestamp()
+    });
+});
+
 app.get('/charge/callback',async (req,res) => {
   try
   {
