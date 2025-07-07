@@ -65,6 +65,59 @@ app.get('/create-payment-id', async (req, res) => {
     }
     return res.status(200).send(randomId);
 });
+// mbbank api
+async function checkLsgd() {
+  const session_id = process.env.mb_session_id;
+  const device_id = process.env.device_id;
+  const mb_cookie = process.env.mb_cookie;
+  const mb_authorization = process.env.mb_authorization;
+  const account_no = process.env.account_no;
+  const refNo = process.env.ref_no;
+
+  const url = 'https://online.mbbank.com.vn/api/retail-transactionms/transactionms/get-account-transaction-history';
+
+  const headers = {
+    "Content-Type": "application/json",
+    "Deviceid": device_id,
+    "authorization": mb_authorization,
+    "refNo": refNo,
+    "Cookie": mb_cookie
+  };
+
+  const vnTime = moment().tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY');
+
+  const payload = JSON.stringify({
+    accountNo: account_no,
+    fromDate: vnTime,
+    toDate: vnTime,
+    sessionId: session_id,
+    refNo: refNo,
+    deviceIdCommon: device_id
+  });
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: headers,
+      body: payload
+    });
+
+    const json = await response.json();
+    return json;
+  } catch (err) {
+    console.error("Lỗi khi gọi API:", err);
+    return null;
+  }
+}
+app.get('/test-api-mbbank', async (req, res) => {
+  try {
+    const result = await checkLsgd();
+    res.status(200).send(result);
+  } catch (err) {
+    console.error("Lỗi khi gọi checkLsgd:", err);
+    res.status(500).send("err");
+  }
+});
 app.get('/create-payment-command',verifyToken, async(req,res) =>
 {
   try
