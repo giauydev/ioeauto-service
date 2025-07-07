@@ -67,15 +67,33 @@ app.get('/create-payment-id', async (req, res) => {
 });
 app.get('/create-payment-command',verifyToken, async(req,res) =>
 {
+  try
+  {
     const maDonHang = req.query.ma_don_hang;
-    await db.collection('lich-su-bank').doc(maDonHang).set({
+  const docRef = db.collection('lich-su-bank').doc(maDonHang);
+  const docSnap = await docRef.get();
+  if(docSnap.exists)
+  {
+    return res.status(409).json({error: "Mã đơn hàng đã tồn tại"});
+  }
+  else
+  {
+    await docRef.set({
         ma_don_hang: maDonHang,
         email_nhan_tien: req.email,
         da_nhan: "",
         ma_giao_dich: "",
-        trang_thai: "Đang chờ xử lý",
+        trang_thai: "Pending",
         time: admin.firestore.FieldValue.serverTimestamp()
     });
+  }
+  return res.status(200).json({message: "Thành công"});
+  }
+  catch
+  {
+      return res.status(501).json({error: "Internal server error"});
+
+  }
 });
 
 app.get('/charge/callback',async (req,res) => {
