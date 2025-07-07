@@ -41,6 +41,11 @@ function randomString(length = 10) {
   }
   return result;
 }
+// uptime server giữ cho backend-srv ko bị sleep
+app.get('/ping', (req,res) =>
+  {
+    res.status(200).send("pong");
+  });
 // xóa vnpay api (giauydev chưa đủ tuổi mở go-live api)
 app.get('/charge/callback',async (req,res) => {
   try
