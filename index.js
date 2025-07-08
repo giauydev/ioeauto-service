@@ -79,6 +79,32 @@ app.get('/create-payment-id', async (req, res) => {
   const account_no = process.env.account_no;
   const refNo = process.env.ref_no;
 // mbbank api
+let count = 0;
+let lsgdCu = [];
+let lsgdMoi = [];
+setInterval(async ()=>
+  {
+    const lichSuGiaoDich = await checkLsgd();
+    lsgdMoi = lichSuGiaoDich;
+    if(count === 0)
+    {
+      lsgdCu = lsgdMoi;
+    }
+    const docNoRef = new Set(lsgdCu.map(item => item.refNo));
+    const lsgdNhanTien = lsgdMoi.filter(item => !docNoRef.has(item.refNo));
+    const lengthNT = lsgdNhanTien.length;
+    for(int i = 0; i<lsgdNhanTien.length;i++)
+    {
+      const desc = lsgdNhanTien[i].addDescription.Trim();
+      String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+      Pattern pattern = Pattern.compile(emailRegex);
+      Matcher matcher = pattern.matcher(desc);
+      if(matcher.matches())
+      {
+        const snapshot = await db.collection('lich-su-bank')
+      }
+    }
+  });
 async function checkLsgd() {
 
 
