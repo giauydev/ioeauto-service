@@ -193,7 +193,7 @@ async function checkLsgd() {
             "addDescription": "uyda119@gmail.com  ",
             "availableBalance": "22001",
             "beneficiaryAccount": "",
-            "refNo": "FT25189364081564",
+            "refNo": "FT251893632081564",
             "benAccountName": "LE THE GIA UY",
             "bankName": "MB",
             "benAccountNo": "0947240001",
