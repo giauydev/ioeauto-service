@@ -82,29 +82,64 @@ app.get('/create-payment-id', async (req, res) => {
 let count = 0;
 let lsgdCu = [];
 let lsgdMoi = [];
-setInterval(async ()=>
-  {
+const admin = require('firebase-admin');
+const db = admin.firestore();
+
+setInterval(async () => {
+  try {
     const lichSuGiaoDich = await checkLsgd();
-    lsgdMoi = lichSuGiaoDich;
-    if(count === 0)
-    {
-      lsgdCu = lsgdMoi;
-    }
-    const docNoRef = new Set(lsgdCu.map(item => item.refNo));
-    const lsgdNhanTien = lsgdMoi.filter(item => !docNoRef.has(item.refNo));
-    const lengthNT = lsgdNhanTien.length;
-    for(int i = 0; i<lsgdNhanTien.length;i++)
-    {
-      const desc = lsgdNhanTien[i].addDescription.Trim();
-      String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-      Pattern pattern = Pattern.compile(emailRegex);
-      Matcher matcher = pattern.matcher(desc);
-      if(matcher.matches())
-      {
+    const lsgdNhanTien = lichSuGiaoDich;
+
+    for (let i = 0; i < lsgdNhanTien.length; i++) {
+      const desc = lsgdNhanTien[i].addDescription.trim();
+      const emailRegex = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$/;
+
+      if (emailRegex.test(desc)) {
         const snapshot = await db.collection('lich-su-bank')
+          .where('email_nhan_tien', '==', desc)
+          .where('ma_giao_dich', '==', '')
+          .where('trang_thai', '==', 'Đang chờ xử lý')
+          .limit(1)
+          .get();
+
+        if (!snapshot.empty) {
+          const existingDoc = await db.collection('ft_mb').doc(lsgdNhanTien[i].refNo).get();
+          if (!existingDoc.exists) {
+       
+            
+            const userSnap = await db.collection('users')
+              .where('email', '==', desc)
+              .limit(1)
+              .get();
+
+            if (!userSnap.empty) {
+              const userDoc = userSnap.docs[0];
+              const userData = userDoc.data();
+              const currentCoin = userData.coin || 0;
+
+              await db.collection('users').doc(userDoc.id).update({
+                coin: currentCoin + parseInt(lsgdNhanTien[i].creditAmount)
+              });
+
+              const bankDoc = snapshot.docs[0];
+              await db.collection('lich-su-bank').doc(bankDoc.id).update({
+                da_nhan: lsgdNhanTien[i].creditAmount,
+                ma_giao_dich: lsgdNhanTien[i].refNo,
+                trang_thai: "Thành công"
+              });
+
+              await db.collection('ft_mb').doc(lsgdNhanTien[i].refNo).set({
+                createdAt: Date.now()
+              });
+            }
+          }
+        }
       }
     }
-  });
+  } catch (error) {
+    console.log('Lỗi:', error.message);
+  }
+}, 120000);
 async function checkLsgd() {
 
 
@@ -172,7 +207,7 @@ app.get('/create-payment-command',verifyToken, async(req,res) =>
         email_nhan_tien: req.email,
         da_nhan: "",
         ma_giao_dich: "",
-        trang_thai: "Pending",
+        trang_thai: "Đang chờ xử lý",
         time: admin.firestore.FieldValue.serverTimestamp()
     });
   }
@@ -328,7 +363,7 @@ const loginRes = await client.post(
 
  setInterval(async () => {
   await loginAndStoreSession();
-}, 3 * 60 * 1000); 
+}, 15 * 60 * 1000); 
 })();
 app.get('/charge/callback',async (req,res) => {
   try
