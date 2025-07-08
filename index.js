@@ -79,9 +79,7 @@ app.get('/create-payment-id', async (req, res) => {
   const account_no = process.env.account_no;
   const refNo = process.env.ref_no;
 // mbbank api
-let count = 0;
-let lsgdCu = [];
-let lsgdMoi = [];
+
 const admin = require('firebase-admin');
 const db = admin.firestore();
 
