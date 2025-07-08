@@ -177,15 +177,7 @@ async function checkLsgd() {
     return null;
   }
 }
-app.get('/test-api-mbbank', async (req, res) => {
-  try {
-    const result = await checkLsgd();
-    res.status(200).send(result);
-  } catch (err) {
-    console.error("Lỗi khi gọi checkLsgd:", err);
-    res.status(500).send("err");
-  }
-});
+
 app.get('/create-payment-command',verifyToken, async(req,res) =>
 {
   try
