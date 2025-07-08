@@ -101,6 +101,7 @@ const emailMatch = desc.match(/[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/);
 
         if (!snapshot.empty) {
           const existingDoc = await db.collection('ft_mb').doc(lsgdNhanTien[i].refNo).get();
+          console.log('01');
           console.log(desc);
           if (!existingDoc.exists) {
        
