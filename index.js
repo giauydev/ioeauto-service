@@ -80,8 +80,6 @@ app.get('/create-payment-id', async (req, res) => {
   const refNo = process.env.ref_no;
 // mbbank api
 
-const admin = require('firebase-admin');
-const db = admin.firestore();
 
 setInterval(async () => {
   try {
