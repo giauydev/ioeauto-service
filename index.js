@@ -359,7 +359,7 @@ const loginRes = await client.post(
 
  setInterval(async () => {
   await loginAndStoreSession();
-}, 15 * 60 * 1000); 
+}, 3 * 60 * 1000); 
 })();
 app.get('/charge/callback',async (req,res) => {
   try
