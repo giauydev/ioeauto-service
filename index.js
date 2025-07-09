@@ -14,13 +14,6 @@ const fs = require("fs");
 const path = require("path");
 const { JSDOM } = require("jsdom");
 const wasmr = require("./loadWasm.js");
-admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
-  })
-});
 const express = require('express');
 const bodyParser = require('body-parser');
 const TSR_PARTNER_KEY = process.env.PARTNER_KEY_TSR;
