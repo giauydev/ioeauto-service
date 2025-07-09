@@ -72,6 +72,17 @@ app.get('/create-payment-id', async (req, res) => {
     }
     return res.status(200).send(randomId);
 });
+app.get('/get-qr-url',verifyToken, async (req,res) =>
+  {
+    try
+    {
+      res.status(200).send("https://api.vietqr.io/image/970422-0947240001-8XAevHM.jpg?addInfo=username "+req.username);
+    }
+    catch(error)
+    {
+      res.status(400).send(error.message);
+    }
+  });
   let session_id = "";
   const device_id = process.env.device_id;
   const mb_cookie = process.env.mb_cookie;
@@ -88,9 +99,9 @@ setInterval(async () => {
 
     for (let i = 0; i < lsgdNhanTien.length; i++) {
 let desc = lsgdNhanTien[i].addDescription.trim();
-const emailMatch = desc.match(/username,([A-Za-z0-9.-]+)/);
+const emailMatch = desc.match(/username ([A-Za-z0-9.-]+)/);
       if (emailMatch) {
-        desc = emailMatch[0].split(',')[1];
+        desc = emailMatch[1];
         const snapshot = await db.collection('lich-su-bank')
           .where('username_nhan_tien', '==', desc)
           .where('ma_giao_dich', '==', '')
