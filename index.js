@@ -524,7 +524,12 @@ app.post('/register', async (req, res) => {
       password,
       displayName: username
     });
-
+    const docUser = db.collection('users').where('username','==',username);
+    const userSnapshot = await docUser.get();
+    if(!userSnapshot.empty)
+    {
+      return res.status(409).json({error: 'Vui lòng thử lại với username khác!'});
+    }
     await db.collection('users').doc(userRecord.uid).set({
       username,
       email,
