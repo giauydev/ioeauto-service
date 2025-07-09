@@ -108,7 +108,7 @@ const emailMatch = desc.match(/username ([A-Za-z0-9.-]+)/);
           console.log(desc);
           if (!existingDoc.exists) {
        
-            
+            console.log(desc);
             const userSnap = await db.collection('users')
               .where('username', '==', desc)
               .limit(1)
@@ -156,7 +156,7 @@ async function checkLsgd() {
     "Cookie": mb_cookie
   };
   const moment = require('moment-timezone');
-  const vnTimeBefore = moment().tz('Asia/Ho_Chi_Minh').subtract(15, 'days').format('DD/MM/YYYY');
+  const vnTimeBefore = moment().tz('Asia/Ho_Chi_Minh').subtract(3, 'days').format('DD/MM/YYYY');
   const vnTime = moment().tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY');
 
   const payload = JSON.stringify({
