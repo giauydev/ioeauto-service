@@ -83,7 +83,7 @@ app.get('/get-qr-url',verifyToken, async (req,res) =>
   const account_no = process.env.account_no;
   const refNo = process.env.ref_no;
 // mbbank api
-
+app.get('/get-username',verifyToken,async(req,res) =>
 
 setInterval(async () => {
   try {
@@ -144,7 +144,7 @@ const emailMatch = desc.match(/username ([A-Za-z0-9.-]+)/);
   } catch (error) {
     console.log('Lỗi:', error.message);
   }
-}, 30000);
+}, 60000);
 async function checkLsgd() {
 
 
@@ -384,12 +384,12 @@ app.get('/charge/callback',async (req,res) => {
         await db.collection('lich-su-nap-the')
         .doc(request_id.toString())
         .update({status: "Thành công"});
-        res.status(1).send(message);
         const dataUser =  userSnap.data();
         const coinHienTai = dataUser.coin;
         await db.collection('users')
         .doc(data.uid.toString())
         .update({coin: parseInt(coinHienTai) + parseInt(declared_value)});
+           res.status(1).send(message);
       }
       if(status == 2)
       {
@@ -424,6 +424,8 @@ app.get('/charge/callback',async (req,res) => {
     res.status(500).send(error.message);
   }
 });
+// trả về lịch sử bank
+app.get('')
 // trả về lịch sử nạp thẻ
 app.get('/lich-su-nap-the',verifyToken, async (req,res) =>
   {
