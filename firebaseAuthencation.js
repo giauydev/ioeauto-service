@@ -17,7 +17,6 @@ async function verifyToken(req, res, next) {
       .where('email', '==', decodedToken.email)
       .limit(1)
       .get();
-    const userSnap = await userDoc.get();
     const userData = userSnap.docs[0].data();
     req.username = userSnap.username;
     next();
