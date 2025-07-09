@@ -88,10 +88,10 @@ setInterval(async () => {
 
     for (let i = 0; i < lsgdNhanTien.length; i++) {
 let desc = lsgdNhanTien[i].addDescription.trim();
-const emailMatch = desc.match(/[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/);
+const emailMatch = desc.match(/[A-Za-z0-9+_.-]+:[A-Za-z0-9.-]+\.[A-Za-z]{2,}/);
 
       if (emailMatch) {
-        desc = emailMatch[0];
+        desc = emailMatch[0].replace(":","@");
         const snapshot = await db.collection('lich-su-bank')
           .where('email_nhan_tien', '==', desc)
           .where('ma_giao_dich', '==', '')
