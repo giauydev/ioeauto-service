@@ -88,14 +88,15 @@ app.get('/get-qr-url',verifyToken, async (req,res) =>
 setInterval(async () => {
   try {
     const lichSuGiaoDich = await checkLsgd();
-    console.log(lichSuGiaoDich);
     const lsgdNhanTien = lichSuGiaoDich;
-
+console.log(lsgdNhanTien.length);
+    
     for (let i = 0; i < lsgdNhanTien.length; i++) {
 let desc = lsgdNhanTien[i].addDescription.trim();
 const emailMatch = desc.match(/username ([A-Za-z0-9.-]+)/);
       if (emailMatch) {
         desc = emailMatch[1];
+        console.log(desc);
         const snapshot = await db.collection('lich-su-bank')
           .where('username_nhan_tien', '==', desc)
           .where('ma_giao_dich', '==', '')
