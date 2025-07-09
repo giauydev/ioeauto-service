@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const db = admin.firestore(); 
 
 async function verifyToken(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -11,6 +12,14 @@ async function verifyToken(req, res, next) {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     req.uid = decodedToken.uid;
     req.email = decodedToken.email;
+     const userSnap = await db
+      .collection('users')
+      .where('email', '==', decodedToken.email)
+      .limit(1)
+      .get();
+    const userSnap = await userDoc.get();
+    const userData = userSnap.docs[0].data();
+    req.username = userSnap.username;
     next();
   } catch (error) {
     console.error("Lỗi xác thực:", error);
