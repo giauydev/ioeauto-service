@@ -83,7 +83,6 @@ app.get('/get-qr-url',verifyToken, async (req,res) =>
   const account_no = process.env.account_no;
   const refNo = process.env.ref_no;
 // mbbank api
-app.get('/get-username',verifyToken,async(req,res) =>
 
 setInterval(async () => {
   try {
