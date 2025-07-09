@@ -142,7 +142,7 @@ const emailMatch = desc.match(/username ([A-Za-z0-9.-]+)/);
   } catch (error) {
     console.log('Lỗi:', error.message);
   }
-}, 120000);
+}, 30000);
 async function checkLsgd() {
 
 
