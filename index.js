@@ -88,6 +88,7 @@ app.get('/get-qr-url',verifyToken, async (req,res) =>
 setInterval(async () => {
   try {
     const lichSuGiaoDich = await checkLsgd();
+    console.log(lichSuGiaoDich);
     const lsgdNhanTien = lichSuGiaoDich;
 
     for (let i = 0; i < lsgdNhanTien.length; i++) {
