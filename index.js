@@ -202,7 +202,7 @@ app.get('/create-payment-command',verifyToken, async(req,res) =>
   {
     await docRef.set({
         ma_don_hang: maDonHang,
-        email_nhan_tien: req.username,
+        username_nhan_tien: req.username,
         da_nhan: "",
         ma_giao_dich: "",
         trang_thai: "Đang chờ xử lý",
