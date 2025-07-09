@@ -88,12 +88,11 @@ setInterval(async () => {
 
     for (let i = 0; i < lsgdNhanTien.length; i++) {
 let desc = lsgdNhanTien[i].addDescription.trim();
-const emailMatch = desc.match(/[A-Za-z0-9+_.-]+:[A-Za-z0-9.-]+\.[A-Za-z]{2,}/);
-
+const emailMatch = desc.match(/username,([A-Za-z0-9.-]+)/);
       if (emailMatch) {
-        desc = emailMatch[0].replace(":","@");
+        desc = emailMatch[0].split(',')[1];
         const snapshot = await db.collection('lich-su-bank')
-          .where('email_nhan_tien', '==', desc)
+          .where('username_nhan_tien', '==', desc)
           .where('ma_giao_dich', '==', '')
           .where('trang_thai', '==', 'Đang chờ xử lý')
           .limit(1)
@@ -107,7 +106,7 @@ const emailMatch = desc.match(/[A-Za-z0-9+_.-]+:[A-Za-z0-9.-]+\.[A-Za-z]{2,}/);
        
             
             const userSnap = await db.collection('users')
-              .where('email', '==', desc)
+              .where('username', '==', desc)
               .limit(1)
               .get();
 
@@ -130,6 +129,7 @@ const emailMatch = desc.match(/[A-Za-z0-9+_.-]+:[A-Za-z0-9.-]+\.[A-Za-z]{2,}/);
               await db.collection('ft_mb').doc(lsgdNhanTien[i].refNo).set({
                 createdAt: Date.now()
               });
+              console.log(`[LSGD] Xử lý: ${desc}, refNo: ${lsgdNhanTien[i].refNo}`);
             }
           }
         }
@@ -196,7 +196,7 @@ app.get('/create-payment-command',verifyToken, async(req,res) =>
   {
     await docRef.set({
         ma_don_hang: maDonHang,
-        email_nhan_tien: req.email,
+        email_nhan_tien: req.username,
         da_nhan: "",
         ma_giao_dich: "",
         trang_thai: "Đang chờ xử lý",
