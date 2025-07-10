@@ -185,7 +185,34 @@ async function checkLsgd() {
     return null;
   }
 }
-
+app.get('/bank-transaction-history',verifyToken,async(req,res) =>
+  {
+    try
+    {
+    const result = [];
+    const bankRef = db.collection('lich-su-bank').where('username_nhan_tien','==',req.username);
+    const bankSnapshot = await bankRef.get();
+    if(bankSnapshot.size == 0)
+    {
+      return res.status(200).json({message: 'Không tìm thấy giao dịch nào được thực hiện trên tài khoản này'});
+    }
+    bankSnapshot.forEach(doc =>
+      {
+        result.push({
+        ma_don_hang: doc.id,
+          ma_giao_dich: doc.data().ma_giao_dich,
+          da_nhan: doc.data().da_nhan,
+          trang_thai: doc.data().trang_thai,
+          time: doc.data().time.toDate().toLocaleString('vi-VN',{timeZone: 'Asia/Ho_Chi_Minh'})
+        });
+      });
+    res.status(200).json(result);
+    }
+    catch(error)
+    {
+          return res.status(401).json({error: error.message});
+    }
+  });
 app.get('/create-payment-command',verifyToken, async(req,res) =>
 {
   try
