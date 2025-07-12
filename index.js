@@ -190,7 +190,7 @@ app.get('/bank-transaction-history',verifyToken,async(req,res) =>
     try
     {
     const result = [];
-    const bankRef = db.collection('lich-su-bank').where('username_nhan_tien','==',req.username);
+    const bankRef = db.collection('lich-su-bank').where('username_nhan_tien','==',req.username).orderBy('time','desc');
     const bankSnapshot = await bankRef.get();
     if(bankSnapshot.size == 0)
     {
