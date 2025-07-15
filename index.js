@@ -414,7 +414,7 @@ app.get('/charge/callback',async (req,res) => {
         const coinHienTai = dataUser.coin;
         await db.collection('users')
         .doc(data.uid.toString())
-        .update({coin: parseInt(coinHienTai) + parseInt(declared_value)});
+        .update({coin: parseInt(coinHienTai) + parseInt(amount)});
            res.status(1).send(message);
       }
       if(status == 2)
