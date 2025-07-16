@@ -69,12 +69,17 @@ app.get('/getAnswer',verifyToken, async(req,res) =>
   {
     try
     {
+      
     const userRef = db.collection('users').doc(req.uid);
     const userSnap = await userRef.get();
     if(!userSnap.exists) 
     {
       return res.status(403).json({result: 'Người dùng không hợp lệ'});
     }
+      if(!req.query.questId)
+      {
+        return res.status(400).json({result: 'Thiếu questId'});
+      }
     if(userSnap.data().coin < 100)
     {
       return res.status(403).json({result: 'Số dư không đủ.'});
@@ -93,8 +98,80 @@ app.get('/getAnswer',verifyToken, async(req,res) =>
     }
     catch(error)
     {
-      return res.status(400).json({error: "Lỗi"+error.message});
+      return res.status(500).json({error: "Lỗi"+error.message});
     }
+  });
+app.get('/get-finishGame-js',verifyToken,async(req,res) =>
+  {
+    try
+    {
+    const userRef = db.collection('users').doc(req.uid);
+    const userSnap = await userRef.get();
+     if(!userSnap.exists) 
+    {
+      return res.status(403).json({result: 'Người dùng không hợp lệ'});
+    }
+      if(!req.query.questIds || !req.query.token || !req.query.examKey)
+      {
+        return res.status(400).json({result: 'Thiếu thông tin!'});
+      }
+    let listQuestion = req.query.questIds.split('|');
+    if(userSnap.data().coin < listQuestion.length*100)
+    {
+      return res.status(403).json({result: 'Số dư cần thiết không đủ để thực hiện hành động này!'});
+    }
+    
+    const result = {
+      api_key: "gameioe",
+      token: req.query.token,
+      serviceCode: "IOE",
+      examKey: req.query.examKey,
+      ans: [],
+      IPClient: "",
+      deviceId: ""
+      
+    };
+      let validCount = 0;
+    for(let i = 0; i< listQuestion.length;i++)
+      {
+        const ansRef = db.collection('ioe_question').doc(listQuestion[i]);
+        const ansSnap = await ansRef.get();
+        if(!ansSnap.exists)
+        {
+          result.ans.push(
+            {
+              questId: parseInt(listQuestion[i]),
+              ans: "Không tìm thấy câu hỏi.",
+              Point: 10
+            }
+          );
+          continue;
+        }
+         result.ans.push(
+            {
+              questId: parseInt(listQuestion[i]),
+              ans: ansSnap.data().ans,
+              Point: 10
+            }
+          );
+        validCount++;
+        
+        
+      }
+      if(validCount > 0)
+      {
+      await userRef.update(
+        {
+            coin: admin.firestore.FieldValue.increment(-100 * validCount)
+        });
+      }
+    return res.status(200).json(result);
+    }
+    catch(error)
+    {
+      return res.status(500).json({message: "Lỗi: "+ error.message});
+    }
+    
   });
 app.get('/get-qr-url',verifyToken, async (req,res) =>
   {
