@@ -65,6 +65,37 @@ app.get('/create-payment-id', async (req, res) => {
     }
     return res.status(200).send(randomId);
 });
+app.get('/getAnswer',verifyToken, async(req,res) =>
+  {
+    try
+    {
+    const userRef = db.collection('users').doc(req.uid);
+    const userSnap = await userRef.get();
+    if(!userSnap.exists) 
+    {
+      return res.status(403).json({result: 'Người dùng không hợp lệ'});
+    }
+    if(userSnap.data().coin < 100)
+    {
+      return res.status(403).json({result: 'Số dư không đủ.'});
+    }
+    const ansRef = db.collection('ioe_question').doc(req.query.questId);
+    const ansSnap = await ansRef.get();
+    if(!ansSnap.exists)
+    {
+      return res.status(404).json({result: 'Không tìm thấy câu hỏi.'});
+    }
+    const result = ansSnap.data().ans;
+     await userRef.update({
+  coin: admin.firestore.FieldValue.increment(-100)
+});
+    return res.status(200).json({result: result});
+    }
+    catch(error)
+    {
+      return res.status(400).json({error: "Lỗi"+error.message});
+    }
+  });
 app.get('/get-qr-url',verifyToken, async (req,res) =>
   {
     try
