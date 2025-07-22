@@ -177,7 +177,7 @@ app.get('/get-qr-url',verifyToken, async (req,res) =>
   {
     try
     {
-      res.status(200).send("https://api.vietqr.io/image/970422-giauyy209-8XAevHM.jpg?addInfo=username "+req.username);
+      res.status(200).send("https://api.vietqr.io/image/970422-0947240001-8XAevHM.jpg?addInfo=username "+req.username);
     }
     catch(error)
     {
