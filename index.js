@@ -101,6 +101,21 @@ app.get('/getAnswer',verifyToken, async(req,res) =>
       return res.status(500).json({error: "Lỗi"+error.message});
     }
   });
+app.get('/checkToken',verifyToken, async(req,res) =>
+  {
+    try
+    {
+    if(req.uid != null)
+    {
+       return res.status(200).json({message: "Thực hiện thành công"});
+    }
+      return  res.status(403).json({message: "Thất bại"});
+    }
+    catch(error)
+    {
+     return res.status(500).json({error: "Lỗi: "+error.message});
+    }
+  });
 app.get('/get-finishGame-js',verifyToken,async(req,res) =>
   {
     try
